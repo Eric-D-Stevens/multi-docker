@@ -8,6 +8,7 @@ services:
     image: 'redis:latest'
   api:
     image: ericstevens1989/complex-api
+    hostname: api
     volumes:
       - /app/node_modules
       - ./server:/app
@@ -22,6 +23,7 @@ services:
   client:
     stdin_open: true
     image: ericstevens1989/complex_client
+    hostname: client
     volumes:
       - /app/node_modules
       - ./client:/app
@@ -29,6 +31,7 @@ services:
       - '3000:3000'
   worker:
     image: ericstevens1989/complex-worker
+    hostname: worker
     volumes:
       - /app/node_modules
       - ./worker:/app
@@ -38,8 +41,9 @@ services:
   nginx:
     restart: always
     image: ericstevens1989/complex-nginx
+    hostname: nginx
     ports:
-      - '3050:80'
+      - '80:80'
     depends_on:
       - api
       - client
