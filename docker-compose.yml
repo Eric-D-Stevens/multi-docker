@@ -10,6 +10,7 @@ services:
     build:
       dockerfile: Dockerfile.dev
       context: ./server
+    image: ericstevens1989/complex-api
     volumes:
       - /app/node_modules
       - ./server:/app
@@ -26,6 +27,7 @@ services:
     build:
       dockerfile: Dockerfile.dev
       context: ./client
+    image: ericstevens1989/complex_client
     volumes:
       - /app/node_modules
       - ./client:/app
@@ -35,6 +37,7 @@ services:
     build: 
       dockerfile: Dockerfile.dev
       context: ./worker
+    image: ericstevens1989/complex-worker
     volumes:
       - /app/node_modules
       - ./worker:/app
@@ -46,6 +49,7 @@ services:
     build:
       dockerfile: Dockerfile.dev
       context: ./nginx
+    image: ericstevens1989/complex-nginx
     ports:
       - '3050:80'
     depends_on:
