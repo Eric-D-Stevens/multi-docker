@@ -21,21 +21,21 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Docker Login
-        uses: docker/login-action@v1.8.0
-        with:
-         username: ${{secrets.DOCKER_USERNAME}}
-         password: ${{secrets.DOCKER_PASSWORD}}
-         logout: true
+      #- name: Docker Login
+      #  uses: docker/login-action@v1.8.0
+      #  with:
+      #   username: ${{secrets.DOCKER_USERNAME}}
+      #   password: ${{secrets.DOCKER_PASSWORD}}
+      #   logout: true
 
-      - name: Build All Images
-        run: docker-compose build --pull
+      #- name: Build All Images
+      #  run: docker-compose build --pull
         
-      - name: Push to dockerhub
-        run: docker-compose push
+      #- name: Push to dockerhub
+      #  run: docker-compose push
         
-      - name: Generate deployment package
-        run: zip -r deploy.zip . -x '*.git*'
+      #- name: Generate deployment package
+      #  run: zip -r deploy.zip . -x '*.git*'
         
       - name: Deploy to EB
         uses: einaregilsson/beanstalk-deploy@v14
@@ -46,5 +46,6 @@ jobs:
          environment_name: Multidocker-env
          version_label: ${{github.sha}}
          region: us-east-1
-         deployment_package: deploy.zip
+         #deployment_package: deploy.zip
+         deployment_package: docker-compose.yml
          
