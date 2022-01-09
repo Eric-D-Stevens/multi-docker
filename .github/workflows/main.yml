@@ -1,0 +1,52 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push
+  push:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      - name: Docker Login
+        uses: docker/login-action@v1.8.0
+        with:
+         username: ${{secrets.DOCKERHUB_USERNAME}}
+         password: ${{secrets.DOCKERHUB_TOKEN}}
+         logout: true
+
+      - name: Build All Images
+        run: docker-compose build --pull
+        
+      - name: Push to dockerhub
+        run: docker-compose push
+        
+      - name: Generate deployment package
+        run: zip -r deploy.zip . -x '*.git*'
+        
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v14
+        with:
+         aws_access_key: ${{ secrets.AWS_ACCESS_KEY }}
+         aws_secret_key: ${{ secrets.AWS_ACCESS_SECRET_KEY }}
+         application_name: multi-docker
+         environment_name: Multidocker-env
+         version_label: ${{github.sha}}
+         region: us-east-1
+         deployment_package: deploy.zip
+         
